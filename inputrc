@@ -1,0 +1,22 @@
+# http://askubuntu.com/questions/280327
+# mappings for making up and down arrow searching through history
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[C": forward-char
+"\e[D": backward-char
+
+#Use tab to cycle through all the possible completions.
+"\t": menu-complete
+
+# completion is case insensitive
+set completion-ignore-case on
+
+# Completion suggestions only displays 4 characters
+set completion-prefix-display-length 4
+
+# Preserve cursor position
+set history-preserve-point on
+
+# Do not autocomplete hidden files
+set match-hidden-files off
+

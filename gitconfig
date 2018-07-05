@@ -1,0 +1,12 @@
+[user]
+	name  = xxxx
+	email = xxxx@xxxx.xxx
+[diff]
+  tool = icdiff
+[push]
+	default = simple
+[alias]
+  di = diff --word-diff -w
+  st = status
+[merge]
+  conflictstyle = diff3

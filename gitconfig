@@ -1,6 +1,6 @@
 [user]
-	name  = xxxx
-	email = xxxx@xxxx.xxx
+	name = Pablo
+	email = pbaeyens31@gmail.com
 [diff]
   tool = icdiff
 [push]
@@ -10,3 +10,9 @@
   st = status
 [merge]
   conflictstyle = diff3
+[help]
+	autocorrect = 2
+[core]
+	autocrlf = input
+[pull]
+	rebase = true

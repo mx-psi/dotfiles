@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: yaml
+# key: yaml
+# --
+---
+layout: post
+title: $1
+authors: [psi]
+tags: [$2]
+description: $3
+---
+
+$0

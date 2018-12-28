@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: rurl
+# key: rurl
+# --
+@misc{$1,
+title={{$2}},
+howpublished={{\url{$3}}},
+year="consultado el ${4:`(format-time-string "%d de %B de %Y")`}"
+}

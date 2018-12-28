@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: init
+# key: init
+# --
+---
+title: $1
+date: $2
+author: ${3:Pablo Baeyens Fernández}
+lang: es
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{tabularx}
+- \usepackage{graphicx}
+toc: true
+numbersections: false
+fontsize: 12pt
+geometry: margin=1in
+---

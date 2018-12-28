@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+#name : init
+#key : init
+#contributor : Pablo Baeyens
+# --
+#+TITLE: $1
+#+AUTHOR: ${2:Pablo Baeyens}
+#+LANGUAGE: ${3:es}
+#+OPTIONS: num:nil toc:nil
+

@@ -1,3 +1,4 @@
+### BEGIN DEFAULT LINUX MINT BASHRC
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -118,36 +119,43 @@ if ! shopt -oq posix; then
   fi
 fi
 
-### LINES ADDED BY ME ###
+### END DEFAULT LINUX MINT BASHRC
+
+
+
+##############
+# MISC STUFF #
+##############
 
 # timezone https://blog.packagecloud.io/eng/2017/02/21/set-environment-variable-save-thousands-of-system-calls/
 export TZ=:/etc/localtime
 export PATH=/usr/local/texlive/2017/bin/x86_64-linux:$PATH
-
+export PATH=~/.cabal/bin:$PATH
 alias sudo='sudo env PATH="$PATH"'
 alias sl='ls --color=auto'
-
+alias dw='youtube-dl -i -x -o "%(title)s.%(ext)s" --audio-format mp3'
 eval "$(pandoc --bash-completion)"
 
 # Trim prompt directory
 export PROMPT_DIRTRIM=2
 
+
 # man colorized pages! http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 man() {
-    env \
-        LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-        LESS_TERMCAP_md=$(printf "\e[1;31m") \
-        LESS_TERMCAP_me=$(printf "\e[0m") \
-        LESS_TERMCAP_se=$(printf "\e[0m") \
-        LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-        LESS_TERMCAP_ue=$(printf "\e[0m") \
-        LESS_TERMCAP_us=$(printf "\e[1;32m") \
-            man "$@"
+  env \
+    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+    man "$@"
 }
 
 auto(){
   while true; do
-    inotifywait -e close_write,moved_to,create .
+    inotifywait -r -e close_write,moved_to,create .
     $@
   done
 }

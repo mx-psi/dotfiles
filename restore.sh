@@ -3,7 +3,7 @@ set -e
 
 # Dropbox configuration variables
 DROPBOX_FOLDER=`hostname`
-RESTORE_FOLDER="/home/pablo/Backups"
+RESTORE_FOLDER="/home/`whoami`/Backups"
 source secrets/duplicity-secrets
 
 # Restore

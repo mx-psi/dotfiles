@@ -5,13 +5,13 @@ declare -a DOTFILES=("bashrc" "emacs/editorconfig" "emacs/snippets"
 
 declare -A LINK_NAMES=(
 ["backup.sh"]="/etc/cron.daily/backup"
-["bashrc"]="/home/pablo/.bashrc"
-["emacs/editorconfig"]="/home/pablo/.editorconfig"
-["emacs/snippets"]="/home/pablo/.emacs.d/snippets"
-["emacs/init.el"]="/home/pablo/.emacs.d/init.el"
-["gitconfig"]="/home/pablo/.gitconfig"
-["hidden"]="/home/pablo/.hidden"
-["inputrc"]="/home/pablo/.inputrc"
+["bashrc"]="/home/`whoami`/.bashrc"
+["emacs/editorconfig"]="/home/`whoami`/.editorconfig"
+["emacs/snippets"]="/home/`whoami`/.emacs.d/snippets"
+["emacs/init.el"]="/home/`whoami`/.emacs.d/init.el"
+["gitconfig"]="/home/`whoami`/.gitconfig"
+["hidden"]="/home/`whoami`/.hidden"
+["inputrc"]="/home/`whoami`/.inputrc"
 )
 
 sudo ln -sbv `pwd`/backup.sh ${LINK_NAMES['backup.sh']}

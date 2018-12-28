@@ -17,6 +17,12 @@ set completion-prefix-display-length 4
 # Preserve cursor position
 set history-preserve-point on
 
+# Symlinks work as directories
+set mark-symlinked-directories on
+
 # Do not autocomplete hidden files
 set match-hidden-files off
 
+# Show matches
+set colored-stats On
+set show-all-if-ambiguous on

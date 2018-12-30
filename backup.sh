@@ -4,7 +4,7 @@ set -e
 
 # Dropbox configuration variables
 DROPBOX_FOLDER=`hostname`
-source ~/dotfiles/secrets/duplicity-secrets
+source /home/pablo/dotfiles/secrets/duplicity-secrets
 
 # Folders to backup
 DOCUMENTS="/home/pablo/Documentos/"

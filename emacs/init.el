@@ -28,6 +28,8 @@
 (scroll-bar-mode -1)
 (tooltip-mode -1)
 
+(setq frame-title-format "%f")
+
 ;; Sensible defaults
 (setq make-backup-files nil)        ;; No backups
 (setq-default word-wrap 1)          ;; Wrap words

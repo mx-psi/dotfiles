@@ -12,8 +12,8 @@ SYNCTHING="/home/pablo/Sync/"
 ZOTERO="/home/pablo/Zotero/"
 DOTFILES="/home/pablo/dotfiles/"
 
-# Remove files older than 90 days from Dropbox
-duplicity remove-older-than 90D --force dpbx://${DROPBOX_FOLDER}
+# Remove files older than 1 year from Dropbox
+duplicity remove-older-than 1Y --force dpbx://${DROPBOX_FOLDER}
 # Sync everything to Dropbox; full backup each month
 duplicity  --full-if-older-than 1M --include=${DOCUMENTS} --include=${SYNCTHING} --include=${ZOTERO} --include=${DOTFILES} --exclude='**' /home/pablo/ dpbx://${DROPBOX_FOLDER}
 # Cleanup failures

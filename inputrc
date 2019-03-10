@@ -25,4 +25,3 @@ set match-hidden-files off
 
 # Show matches
 set colored-stats On
-set show-all-if-ambiguous on

@@ -2,6 +2,7 @@
 ;;; Commentary:
 
 ;;; Code:
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
@@ -19,28 +20,34 @@
 
 ;; EMACS CONFIG ;;
 
-;; Minimalistic setup (No startup, scratch-message, toolbar,menu,scroll bar or tooltip)
+
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq initial-major-mode 'markdown-mode)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(tooltip-mode -1)
-
-(setq frame-title-format "%f")
-
-;; Sensible defaults
-(setq make-backup-files nil)        ;; No backups
-(setq-default word-wrap 1)          ;; Wrap words
-(global-visual-line-mode t)
-(setq-default fill-column 80)
 (pending-delete-mode 1)             ;; Delete selection when typing
 (global-auto-revert-mode 1)         ;; Auto refresh
 (setq resize-mini-windows nil)
-(defalias 'yes-or-no-p #'y-or-n-p) ;; honestly who says "yes" nowadays?
-(global-set-key "\C-x\C-k" 'kill-buffer) ;; C-x C-k does the same as C-x k
-(global-set-key "\C-x\ f" 'find-file) ;; Same as above, overrides fill-column
+(global-visual-line-mode t)
+
+(defun set-frame (_)
+  (setq frame-title-format "%f")
+  (set-frame-font "Iosevka 12" nil t)
+  ;; Minimalistic setup (No startup, scratch-message, toolbar,menu,scroll bar or tooltip)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tooltip-mode -1)
+  ;; Sensible defaults
+  (setq make-backup-files nil)        ;; No backups
+  (setq-default word-wrap 1)          ;; Wrap words
+  (setq-default fill-column 80)
+  (defalias 'yes-or-no-p #'y-or-n-p) ;; honestly who says "yes" nowadays?
+  (global-set-key "\C-x\C-k" 'kill-buffer) ;; C-x C-k does the same as C-x k
+  (global-set-key "\C-x\ f" 'find-file) ;; Same as above, overrides fill-column
+)
+
+(add-to-list 'after-make-frame-functions #'set-frame)
+
 
 ;; Path
 
@@ -50,13 +57,24 @@
 
 ;; Theme
 
-(use-package dracula-theme
+(use-package spacemacs-common
+    :ensure spacemacs-theme
+  :config (load-theme 'spacemacs-dark t))
+
+
+(use-package pretty-mode
   :ensure t
-  :config
-  (load-theme 'dracula t)
+  :init (global-pretty-mode t)
+  :config (progn
+  (pretty-deactivate-groups
+    '(:logic :nil))
+  (pretty-activate-groups
+    '(:greek :arithmetic-nary :punctuation))
+  (pretty-deactivate-patterns '(:circ :++ :sum :product)))
   )
 
-(set-frame-font "Iosevka 12" nil t)
+
+
 
 ;; Language-specific
 
@@ -75,11 +93,6 @@
     (setq org-hierarchical-todo-statistics nil) ;; Stats are recursive
     (setq org-support-shift-select t)
     (setq org-directory "~/org")
-    (setq org-agenda-files
-          (mapcar (lambda (path) (concat org-directory path))
-                  '("/agenda.org"
-                    "/proyectos.org"
-                     "/inbox.org")))
     (setq org-enforce-todo-dependencies t) ;; TODO dependencies are enforced
     (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
    )
@@ -92,40 +105,13 @@
 
 ;; Markdown
 
-(defun de-unicode ()
-  "Replaces strings in the buffer with prettier equivalents. From Gwern."
-  (interactive
-  (save-excursion
-    (goto-char (point-min))
-    (replace-string "ﬂ" "fl")
-    (replace-string "ﬁ" "fi")
-    (replace-string "..." "…")
-    (replace-string "‎" " ")
-    (replace-string "​" " ")
-    (replace-string "﻿" "")
-    nil)))
-
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
           ("\\.markdown\\'" . markdown-mode))
-  :init (add-hook 'markdown-mode-hook
-          (lambda ()
-            (when buffer-file-name
-              (add-hook 'before-save-hook
-                        'de-unicode
-                        nil t))))
   )
-
-;; (use-package auctex
-;;   :ensure t)
-
-;; (use-package cdlatex
-;;   :ensure t
-;;   :config (add-hook 'markdown-mode-hook 'turn-on-cdlatex)
-;;   )
 
 ;; Haskell
 
@@ -151,6 +137,7 @@
   :ensure t
   :mode ("\\.R\\'" . R-mode)
   :commands R
+  :init (progn (setq ess-fancy-comments nil))
 )
 
 ;; C++
@@ -160,39 +147,10 @@
   :ensure t
   :bind ("C-c f" . clang-format-region))
 
-;; C-sharp
-
-(use-package cl
-  :ensure t)
-(use-package csharp-mode
-  :ensure t)
-
 ;; Idris
 
 (use-package idris-mode
   :ensure t)
-
-;;Magit
-
-(use-package magit
-  :ensure t
-  :commands magit-get-top-dir
-  :bind (("C-c g" . magit-status)
-         ("C-c C-g l" . magit-file-log)
-         ("C-c f" . magit-grep))
-  :init
-  (progn
-    ;; magit settings
-    (setq
-     ;; use ido to look for branches
-     magit-completing-read-function 'magit-ido-completing-read
-     ;; don't put "origin-" in front of new branch names by default
-     magit-default-tracking-name-function 'magit-default-tracking-name-branch-only
-     ;; open magit status in same window as current buffer
-     magit-status-buffer-switch-function 'switch-to-buffer
-     ;; highlight word/letter changes in hunk diffs
-     magit-diff-refine-hunk t
-     )))
 
 ;; Editorconfig
 (use-package editorconfig
@@ -276,8 +234,6 @@
   :diminish ""
   :init
   (progn
-    ;; Enable spell check in program comments
-    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
     ;; Enable spell check in plain text / org-mode
     (add-hook 'text-mode-hook 'flyspell-mode)
     (add-hook 'org-mode-hook 'flyspell-mode)
@@ -295,3 +251,32 @@
     (define-key flyspell-mouse-map [down-mouse-3] 'flyspell-correct-word)
     (define-key flyspell-mouse-map [mouse-3] 'undefined)
     (define-key flyspell-mode-map (kbd "C-;") nil)))
+
+(use-package guess-language         ; Automatically detect language for Flyspell
+  :ensure t
+  :defer t
+  :init (add-hook 'text-mode-hook #'guess-language-mode)
+  :config
+  (setq guess-language-langcodes '((en . ("en_GB" "English"))
+                                   (es . ("es_ES" "Spanish")))
+        guess-language-languages '(en es)
+        guess-language-min-paragraph-length 45)
+  :diminish guess-language-mode)
+
+(add-to-list 'load-path "~/.emacs.d/local")
+(require 'pddl-mode)
+(require 'google-c-style)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+  '(package-selected-packages
+     (quote
+       (yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode monokai-theme mediawiki markdown-mode magit lex jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dracula-theme dockerfile-mode csv-mode csharp-mode company-jedi clips-mode clang-format cdlatex auctex))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

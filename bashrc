@@ -139,6 +139,12 @@ eval "$(pandoc --bash-completion)"
 # Trim prompt directory
 export PROMPT_DIRTRIM=2
 
+# emacs server
+
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient"                  # $EDITOR opens in terminal
+export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
+export GIT_EDITOR="emacsclient -t"
 
 # man colorized pages! http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 man() {
@@ -155,7 +161,7 @@ man() {
 
 auto(){
   while true; do
-    inotifywait -r -e close_write,moved_to,create .
     $@
+    inotifywait -r -e close_write,moved_to,create .
   done
 }

@@ -1,6 +1,7 @@
 [user]
 	name = Pablo
-	email = pbaeyens31@gmail.com
+	email = mx-psi@users.noreply.github.com
+	signingkey = 6011EC525959A9D4
 [diff]
   tool = icdiff
 [push]
@@ -16,3 +17,7 @@
 	autocrlf = input
 [pull]
 	rebase = true
+[commit]
+	gpgSign = true
+[gpg]
+  program = gpg2

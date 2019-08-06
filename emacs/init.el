@@ -20,7 +20,6 @@
 
 ;; EMACS CONFIG ;;
 
-
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq initial-major-mode 'markdown-mode)
@@ -28,7 +27,11 @@
 (global-auto-revert-mode 1)         ;; Auto refresh
 (setq resize-mini-windows nil)
 (global-visual-line-mode t)
+(setq-default indicate-empty-lines t
+  show-trailing-whitespace t)
 
+
+;; Run only when the frame has been created (for emacsclient)
 (defun set-frame (_)
   (setq frame-title-format "%f")
   (set-frame-font "Iosevka 12" nil t)
@@ -62,6 +65,7 @@
   :config (load-theme 'spacemacs-dark t))
 
 
+;; Show pretty symbols
 (use-package pretty-mode
   :ensure t
   :init (global-pretty-mode t)
@@ -72,7 +76,6 @@
     '(:greek :arithmetic-nary :punctuation))
   (pretty-deactivate-patterns '(:circ :++ :sum :product)))
   )
-
 
 
 
@@ -98,6 +101,7 @@
    )
   )
 
+;; Pretty org-bullets
 (use-package org-bullets
   :ensure t
   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -225,58 +229,4 @@
     (smartparens-global-mode 1)
     (show-smartparens-global-mode 1))
   :config (setq smartparens-strict-mode t)
- )
-
-;; Spelling
-
-(use-package flyspell
-  :ensure t
-  :diminish ""
-  :init
-  (progn
-    ;; Enable spell check in plain text / org-mode
-    (add-hook 'text-mode-hook 'flyspell-mode)
-    (add-hook 'org-mode-hook 'flyspell-mode)
-    (setq flyspell-issue-welcome-flag nil)
-    (setq flyspell-issue-message-flag nil)
-
-    ;; ignore repeated words
-    (setq flyspell-mark-duplications-flag nil)
-
-    (setq-default ispell-program-name "/usr/bin/aspell")
-    (setq-default ispell-list-command "list"))
-  :config
-  (progn
-    ;; Make spell check on right click.
-    (define-key flyspell-mouse-map [down-mouse-3] 'flyspell-correct-word)
-    (define-key flyspell-mouse-map [mouse-3] 'undefined)
-    (define-key flyspell-mode-map (kbd "C-;") nil)))
-
-(use-package guess-language         ; Automatically detect language for Flyspell
-  :ensure t
-  :defer t
-  :init (add-hook 'text-mode-hook #'guess-language-mode)
-  :config
-  (setq guess-language-langcodes '((en . ("en_GB" "English"))
-                                   (es . ("es_ES" "Spanish")))
-        guess-language-languages '(en es)
-        guess-language-min-paragraph-length 45)
-  :diminish guess-language-mode)
-
-(add-to-list 'load-path "~/.emacs.d/local")
-(require 'pddl-mode)
-(require 'google-c-style)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-  '(package-selected-packages
-     (quote
-       (yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode monokai-theme mediawiki markdown-mode magit lex jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dracula-theme dockerfile-mode csv-mode csharp-mode company-jedi clips-mode clang-format cdlatex auctex))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  )

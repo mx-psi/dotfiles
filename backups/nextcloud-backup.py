@@ -7,6 +7,9 @@ import os.path
 import tempfile
 import ftplib
 
+NC_SECRETS = os.path.expanduser("~/dotfiles/secrets/nextcloud-secrets.yaml")
+FTP_SECRETS = os.path.expanduser("~/dotfiles/secrets/ftp-secrets.yaml")
+
 def load_yaml(filepath):
     """Gets the credentials from secret YAML file."""
     with open(filepath, 'r') as f:
@@ -41,6 +44,6 @@ def backup_calendars(data, ftp_data):
 
 
 if __name__ == "__main__":
-    credentials = load_yaml(os.path.expanduser("~/dotfiles/secrets/nextcloud-secrets.yaml"))
-    ftp_data = load_yaml(os.path.expanduser("~/dotfiles/secrets/ftp-secrets.yaml"))
+    credentials = load_yaml(NC_SECRETS)
+    ftp_data = load_yaml(FTP_SECRETS)
     backup_calendars(credentials, ftp_data)

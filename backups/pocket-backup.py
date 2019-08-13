@@ -5,6 +5,10 @@ import requests
 import os.path
 import datetime
 
+
+POCKET_SECRETS = os.path.expanduser(
+        "~/dotfiles/secrets/pocket-secrets.yaml")
+
 def load_yaml(filepath):
     """Gets the credentials from secret YAML file."""
     with open(filepath, 'r') as f:
@@ -21,9 +25,7 @@ def get_new_favorites():
     """Gets new favourites from Pocket."""
 
     # Get API keys
-    pocket_secrets = os.path.expanduser(
-        "~/dotfiles/secrets/pocket-secrets.yaml")
-    pocket_login = load_yaml(pocket_secrets)
+    pocket_login = load_yaml(POCKET_SECRETS)
 
     # See: getpocket.com/developer/docs/v3/retrieve
     params = pocket_login.copy()

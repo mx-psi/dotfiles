@@ -43,7 +43,7 @@ def get_new_favorites():
         # Update last time we checked
         pocket_login["since"] = int(
             datetime.datetime.timestamp(datetime.datetime.now()))
-        store_yaml(pocket_secrets, pocket_login)
+        store_yaml(POCKET_SECRETS, pocket_login)
 
         # if there are no new items a list is returned, else it's a dictionary (?)
         items = answer.json()["list"]

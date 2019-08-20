@@ -2,15 +2,16 @@
 
 ## General backups
 
-I use `backup.sh` to automate backups of certain folders on Dropbox (based on [this](https://www.roussos.cc/2018/03/05/duplicity-gpg-dropbox/)).
-The `secrets/duplicity-secrets` file contains the necessary exports for the backup script to work:
+I use `general-backup.py` to automate backups of certain folders to Dropbox (based on [this](https://www.roussos.cc/2018/03/05/duplicity-gpg-dropbox/)).
+The `secrets/duplicity-secrets.yaml` file contains the necessary exports for the backup script to work:
 
-```bash
-export DPBX_ACCESS_TOKEN="[Dropbox access token]"
-export PASSPHRASE="[passphrase for encryption]"
+```yaml
+DPBX_ACCESS_TOKEN: [Dropbox access token]
+PASSPHRASE: [passphrase for encryption]
 ```
 
-Backups can be restored using `restore.sh`.
+The `files-to-sync.dat` file includes the list of files to sync using `duplicity`'s syntax.
+Backups can be restored using `restore.py`.
 
 <!-- I had to run `pip install dropbox --upgrade` for it to work. -->
 

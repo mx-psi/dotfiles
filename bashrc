@@ -131,6 +131,7 @@ fi
 export TZ=:/etc/localtime
 export PATH=/usr/local/texlive/2017/bin/x86_64-linux:$PATH
 export PATH=~/.cabal/bin:$PATH
+export PATH="~/lib/scripts/:$PATH"
 alias sudo='sudo env PATH="$PATH"'
 alias sl='ls --color=auto'
 alias dw='youtube-dl -i -x -o "%(title)s.%(ext)s" --audio-format mp3'
@@ -145,6 +146,7 @@ export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient"                  # $EDITOR opens in terminal
 export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export GIT_EDITOR="emacsclient -t"
+
 
 # man colorized pages! http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 man() {

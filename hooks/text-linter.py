@@ -7,9 +7,10 @@ import re
 
 def get_modified_files():
     """Get a list of modified files."""
-    output = subprocess.run(["git", "diff", "--cached", "--name-only"],
-                            stdout=subprocess.PIPE,
-                            universal_newlines=True)
+    output = subprocess.run(
+        ["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"],
+        stdout=subprocess.PIPE,
+        universal_newlines=True)
     return output.stdout.splitlines()
 
 

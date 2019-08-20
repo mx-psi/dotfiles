@@ -3,7 +3,8 @@
 	email = mx-psi@users.noreply.github.com
 	signingkey = 6011EC525959A9D4
 [diff]
-  tool = icdiff
+  suppressBlankEmpty = true
+  indentHeuristic = true
 [push]
 	default = simple
 [alias]

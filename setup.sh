@@ -3,10 +3,10 @@
 declare -a DOTFILES=("bashrc" "emacs/editorconfig" "emacs/snippets"
           "emacs/init.el" "gitconfig" "hidden" "inputrc")
 
-declare -a SU_DOTFILES=("backups/backup.sh" "backups/nextcloud-backup.py" "backups/pocket-backup.py")
+declare -a SU_DOTFILES=("backups/general-backup.py" "backups/nextcloud-backup.py" "backups/pocket-backup.py")
 
 declare -A LINK_NAMES=(
-["backups/backup.sh"]="/etc/cron.daily/backup"
+["backups/general-backup.py"]="/etc/cron.daily/backup"
 ["backups/nextcloud-backup.py"]="/etc/cron.monthly/nextcloud-backup"
 ["backups/pocket-backup.py"]="/etc/cron.daily/pocket-backup"
 ["bashrc"]="/home/`whoami`/.bashrc"

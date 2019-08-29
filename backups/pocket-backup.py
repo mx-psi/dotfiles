@@ -5,9 +5,8 @@ import requests
 import os.path
 import datetime
 
+POCKET_SECRETS = "/home/pablo/dotfiles/secrets/pocket-secrets.yaml"
 
-POCKET_SECRETS = os.path.expanduser(
-        "~/dotfiles/secrets/pocket-secrets.yaml")
 
 def load_yaml(filepath):
     """Gets the credentials from secret YAML file."""
@@ -54,9 +53,8 @@ def get_new_favorites():
 
 if __name__ == "__main__":
     # Store in the log
-    log_path = os.path.expanduser(
-        "~/Documentos/codual/_log/{today.year}/m{today.month:02d}.md".format(
-            today=datetime.date.today()))
+    log_path = "/home/pablo/Documentos/codual/_log/{today.year}/m{today.month:02d}.md".format(
+        today=datetime.date.today())
 
     with open(log_path, 'a') as log_file:
         favourites = get_new_favorites()

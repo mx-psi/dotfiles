@@ -4,6 +4,7 @@ import yaml
 import requests
 import os.path
 import datetime
+import shutil
 
 POCKET_SECRETS = "/home/pablo/dotfiles/secrets/pocket-secrets.yaml"
 
@@ -62,3 +63,4 @@ if __name__ == "__main__":
             log_file.write("- [{name}]({url})\n".format(
                 name=favourite["resolved_title"],  # FIXME: broken for PDFs
                 url=favourite["resolved_url"]))
+    shutil.chown(log_path, user="pablo")

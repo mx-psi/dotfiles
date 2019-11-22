@@ -10,7 +10,7 @@ import platform
 # MODIFIABLE PARAMETERS
 
 # Destination folder
-DEST_FOLDER = "dpbx://" + platform.node()  # hostname
+DEST_FOLDER = "dpbx://pablo-W740SU"  # hostname
 
 # Secret files
 LIST_FILE = "/home/pablo/dotfiles/secrets/files-to-sync.dat"
@@ -26,7 +26,7 @@ FULL_SPAN = "1M"
 def load_secrets(filepath):
     """Load secrets into environment variables that can be used by duplicity."""
     with open(filepath, 'r') as data:
-        os.environ.update(yaml.load(data.read()))
+        os.environ.update(yaml.safe_load(data.read()))
 
 
 if __name__ == "__main__":

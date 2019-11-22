@@ -12,7 +12,7 @@ POCKET_SECRETS = "/home/pablo/dotfiles/secrets/pocket-secrets.yaml"
 def load_yaml(filepath):
     """Gets the credentials from secret YAML file."""
     with open(filepath, 'r') as f:
-        return yaml.load(f.read())
+        return yaml.safe_load(f.read())
 
 
 def store_yaml(filepath, contents):

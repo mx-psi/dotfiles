@@ -45,12 +45,16 @@
   (setq-default word-wrap 1)          ;; Wrap words
   (setq-default fill-column 80)
   (defalias 'yes-or-no-p #'y-or-n-p) ;; honestly who says "yes" nowadays?
-  (global-set-key "\C-x\C-k" 'kill-buffer) ;; C-x C-k does the same as C-x k
-  (global-set-key "\C-x\ f" 'find-file) ;; Same as above, overrides fill-column
 )
 
 (add-to-list 'after-make-frame-functions #'set-frame)
 
+(global-set-key "\C-x\C-k" 'kill-buffer) ;; C-x C-k does the same as C-x k
+(global-set-key "\C-x\ f" 'find-file) ;; Same as above, overrides fill-column
+
+;; Move between buffers
+(global-set-key  (kbd "<C-tab>") 'next-buffer)
+(global-set-key (kbd "<C-iso-lefttab>") 'previous-buffer)
 
 ;; Path
 
@@ -134,16 +138,6 @@
   :mode "\\.rs\\'"
   )
 
-
-;; R
-
-(use-package ess
-  :ensure t
-  :mode ("\\.R\\'" . R-mode)
-  :commands R
-  :init (progn (setq ess-fancy-comments nil))
-)
-
 ;; C++
 
 ;; Clang formatting
@@ -155,6 +149,14 @@
 
 (use-package idris-mode
   :ensure t)
+
+
+;; Go
+(use-package go-mode
+  :ensure t
+  :mode "\\.go\\'"
+  )
+
 
 ;; Editorconfig
 (use-package editorconfig
@@ -229,4 +231,18 @@
     (smartparens-global-mode 1)
     (show-smartparens-global-mode 1))
   :config (setq smartparens-strict-mode t)
+ )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode monokai-theme mediawiki markdown-mode magit lex jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dracula-theme dockerfile-mode csv-mode csharp-mode company-jedi clips-mode clang-format cdlatex auctex))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  )

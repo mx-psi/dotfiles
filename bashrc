@@ -1,8 +1,3 @@
-### BEGIN DEFAULT LINUX MINT BASHRC
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -21,46 +16,30 @@ HISTSIZE=1000
 HISTFILESIZE=2000
 HISTCONTROL=erasedups:ignorespace
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+xhost +local:root > /dev/null 2>&1
+
+complete -cf sudo
+
+# Bash won't get SIGWINCH if another process is in the foreground.
+# Enable checkwinsize so that bash will check the terminal size when
+# it regains control.  #65623
+# http://cnswww.cns.cwru.edu/~chet/bash/FAQ (E11)
 shopt -s checkwinsize
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-shopt -s globstar
+shopt -s expand_aliases
 
+# Enable history appending instead of overwriting.  #139609
+shopt -s histappend
 
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+source /usr/share/git/completion/git-prompt.sh
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
+GIT_PS1_SHOWDIRTYSTATE='y'
+GIT_PS1_SHOWSTASHSTATE='y'
+GIT_PS1_SHOWUNTRACKEDFILES='y'
+GIT_PS1_SHOWCOLORHINTS='true'
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]psi\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+color_prompt=yes
+if [ "$color_prompt" = yes ]; then PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]psi\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1 "(%s)")\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -94,10 +73,11 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias cp="cp -i"                          # confirm before overwriting something
+alias df='df -h'                          # human-readable sizes
+alias free='free -m'                      # show sizes in MB
+alias np='nano -w PKGBUILD'
+alias more=less
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -119,9 +99,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-### END DEFAULT LINUX MINT BASHRC
-
-
 
 ##############
 # MISC STUFF #
@@ -129,10 +106,11 @@ fi
 
 # timezone https://blog.packagecloud.io/eng/2017/02/21/set-environment-variable-save-thousands-of-system-calls/
 export TZ=:/etc/localtime
-export PATH=/usr/local/texlive/2017/bin/x86_64-linux:$PATH
-export PATH=~/.cabal/bin:$PATH
+
+export PATH="/usr/local/texlive/2019/bin/x86_64-linux:$PATH"
+export PATH="~/.cabal/bin:$PATH"
 export PATH="~/lib/scripts/:$PATH"
-alias sudo='sudo env PATH="$PATH"'
+export PATH="/usr/local/go/bin:$PATH"
 alias sl='ls --color=auto'
 alias dw='youtube-dl -i -x -o "%(title)s.%(ext)s" --audio-format mp3'
 eval "$(pandoc --bash-completion)"

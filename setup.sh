@@ -22,7 +22,6 @@ for dotfile in "${SU_DOTFILES[@]}"
 do
   sudo ln -sbv `pwd`/$dotfile ${LINK_NAMES[$dotfile]}
 done
-exit
 
 
 for dotfile in "${DOTFILES[@]}"

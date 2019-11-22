@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: man
-# key: man
-# --
-@misc{man$1,
-title={{Manual de \texttt{${2:$1}}}},
-howpublished={{Accesible con el comando \texttt{man $2}}},
-year="consultado el ${3:`(format-time-string "%d de %B de %Y")`}"
-}

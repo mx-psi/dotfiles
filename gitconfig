@@ -1,7 +1,7 @@
 [user]
-	name = Pablo
-	email = mx-psi@users.noreply.github.com
-	signingkey = 6011EC525959A9D4
+	name = Pablo Baeyens
+	email = pbaeyens31+github@gmail.com
+	signingkey = 62EB0DF9
 [diff]
   suppressBlankEmpty = true
   indentHeuristic = true

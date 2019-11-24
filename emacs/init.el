@@ -37,6 +37,9 @@
 (pending-delete-mode 1)             ;; Delete selection when typing
 (global-auto-revert-mode 1)         ;; Auto refresh
 (global-visual-line-mode t)
+(global-linum-mode t)
+(column-number-mode t)
+
 
 ;; Backups
 (setq
@@ -68,17 +71,18 @@
 (global-set-key  (kbd "<C-tab>") 'next-buffer)
 (global-set-key (kbd "<C-iso-lefttab>") 'previous-buffer)
 
-;; Path
-
-(setq exec-path (append exec-path '("~/.cabal/bin")))
-
-;; Git
-
-(setq vc-follow-symlinks t)
 
 ;; PACKAGES ;;
 
-(use-package diminish :ensure t)
+(use-package diminish
+  :ensure t
+  :config
+  (progn
+    (diminish eldoc-mode)
+    (diminish visual-line-mode)
+    )
+  )
+
 (use-package smex
   :ensure t
   :init (smex-initialize)
@@ -125,6 +129,10 @@
   (pretty-deactivate-patterns '(:circ :++ :sum :product :equality :==)))
   )
 
+(use-package format-all
+  :ensure t
+  :diminish format-all-mode
+  )
 
 
 ;; Language-specific
@@ -147,7 +155,8 @@
       org-support-shift-select t
       org-directory "~/org"
       org-enforce-todo-dependencies t ;; TODO dependencies are enforced
-      org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
+      org-format-latex-options (plist-put org-format-latex-options :scale 1.6)
+      )
    )
   )
 
@@ -173,26 +182,20 @@
   :ensure t
   :commands haskell-mode
   :mode "\\.hs\\'"
+  :config
+  (progn
+    (setq
+      haskell-process-suggest-remove-import-lines t
+      haskell-process-auto-import-loaded-modules t
+      haskell-process-log t
+      )
+    (add-hook 'haskell-mode-hook 'format-all-mode)
+    )
   )
-
-;; Rust
-
-(use-package rust-mode
-  :ensure t
-  :bind (("C-c C-c" . recompile))
-  :commands rust-mode
-  :mode "\\.rs\\'"
-  )
-
-;; C++
-
-;; Clang formatting
-(use-package clang-format
-  :ensure t
-  :bind ("C-c f" . clang-format-region))
 
 ;; Misc languages
 
+(use-package rust-mode :ensure t)
 (use-package idris-mode :ensure t)
 (use-package go-mode :ensure t)
 
@@ -220,19 +223,17 @@
     ;; Use Company for completion
     (bind-key [remap completion-at-point] #'company-complete company-mode-map)
 
-    (setq company-tooltip-align-annotations t
-          ;; Easy navigation to candidates with M-<n>
-          company-show-numbers t)
-    (setq company-dabbrev-downcase nil)
-    (setq company-minimum-prefix-length 2)
-    (setq company-idle-delay 0.1))
+    (setq
+      company-tooltip-align-annotations t
+      company-show-numbers t
+      company-dabbrev-downcase nil
+      company-minimum-prefix-length 2
+      company-idle-delay 0.1))
   :diminish company-mode)
 
 ;; Python auto completion
 
-(use-package jedi
-  :ensure t
-  )
+(use-package jedi :ensure t)
 
 (use-package company-jedi
   :ensure t
@@ -241,18 +242,26 @@
   :config
   (add-to-list 'company-backends 'company-jedi))
 
+;; Git
+
+(setq vc-follow-symlinks t)
+(use-package diff-hl
+  :ensure t
+  :init (global-diff-hl-mode)
+  )
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-  '(custom-safe-themes
-     (quote
-       ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" default)))
-  '(package-selected-packages
-     (quote
-       (nordless-theme go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode monokai-theme mediawiki markdown-mode magit lex jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dracula-theme dockerfile-mode csv-mode csharp-mode company-jedi clips-mode clang-format cdlatex auctex))))
+ '(custom-safe-themes
+   (quote
+    ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" default)))
+ '(package-selected-packages
+   (quote
+    (diff-hl nordless-theme go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode monokai-theme mediawiki markdown-mode magit lex jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dracula-theme dockerfile-mode csv-mode csharp-mode company-jedi clips-mode clang-format cdlatex auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

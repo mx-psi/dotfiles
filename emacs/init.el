@@ -37,7 +37,6 @@
 (pending-delete-mode 1)             ;; Delete selection when typing
 (global-auto-revert-mode 1)         ;; Auto refresh
 (global-visual-line-mode t)
-(global-linum-mode t)
 (column-number-mode t)
 
 
@@ -74,14 +73,7 @@
 
 ;; PACKAGES ;;
 
-(use-package diminish
-  :ensure t
-  :config
-  (progn
-    (diminish eldoc-mode)
-    (diminish visual-line-mode)
-    )
-  )
+(use-package diminish :ensure t)
 
 (use-package smex
   :ensure t
@@ -112,10 +104,15 @@
 
 ;; Theme
 
-(use-package spacemacs-common
-    :ensure spacemacs-theme
-  :config (load-theme 'spacemacs-dark t))
+(use-package moe-theme
+  :ensure t
+  :config
+  (moe-dark))
 
+(use-package beacon
+  :ensure t
+  :diminish beacon-mode
+  :config (beacon-mode +1))
 
 ;; Show pretty symbols
 (use-package pretty-mode
@@ -195,6 +192,7 @@
 
 ;; Misc languages
 
+(use-package yaml-mode :ensure t)
 (use-package rust-mode :ensure t)
 (use-package idris-mode :ensure t)
 (use-package go-mode :ensure t)
@@ -256,12 +254,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" default)))
- '(package-selected-packages
-   (quote
-    (diff-hl nordless-theme go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode monokai-theme mediawiki markdown-mode magit lex jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dracula-theme dockerfile-mode csv-mode csharp-mode company-jedi clips-mode clang-format cdlatex auctex))))
+  '(custom-safe-themes
+     (quote
+       ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" default)))
+  '(package-selected-packages
+     (quote
+       (diff-hl go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode markdown-mode magit jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dockerfile-mode csv-mode company-jedi clang-format cdlatex auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

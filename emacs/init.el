@@ -22,16 +22,16 @@
 
 ;; Aesthetics
 (setq
-  inhibit-startup-screen t
-  initial-scratch-message nil
-  initial-major-mode 'markdown-mode
-  resize-mini-windows nil)
+ inhibit-startup-screen t
+ initial-scratch-message nil
+ initial-major-mode 'markdown-mode
+ resize-mini-windows nil)
 
 (setq-default
-  indicate-empty-lines t
-  show-trailing-whitespace t
-  word-wrap 1
-  fill-column 80)
+ indicate-empty-lines t
+ show-trailing-whitespace t
+ word-wrap 1
+ fill-column 80)
 
 
 (pending-delete-mode 1)             ;; Delete selection when typing
@@ -42,24 +42,25 @@
 
 ;; Backups
 (setq
-  backup-directory-alist '(("." . "~/.emacs.d/backups"))
-  delete-old-versions -1
-  version-control t
-  vc-make-backup-files t
-  auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+ backup-directory-alist '(("." . "~/.emacs.d/backups"))
+ delete-old-versions -1
+ version-control t
+ vc-make-backup-files t
+ auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 
 (defalias 'yes-or-no-p #'y-or-n-p) ;; honestly who says "yes" nowadays?
 
 
-;; Run only when the frame has been created (for emacsclient)
 (defun set-frame (_)
+  "Set frame properties after it has been created (for emacsclient)."
+
   (setq frame-title-format "%f")
   (set-frame-font "Fira Code 12" nil t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (tooltip-mode -1)
-)
+  )
 
 (add-to-list 'after-make-frame-functions #'set-frame)
 
@@ -73,8 +74,6 @@
 
 ;; PACKAGES ;;
 
-(use-package diminish :ensure t)
-
 (use-package smex
   :ensure t
   :init (smex-initialize)
@@ -84,6 +83,7 @@
 (use-package ido
   :ensure t
   :defer t
+  :commands ido-everywhere
   :config
   (progn
     (ido-mode 1)
@@ -102,12 +102,20 @@
   :config (setq smartparens-strict-mode t)
   )
 
+(use-package flycheck
+  :ensure t
+  :init  (global-flycheck-mode)
+  :config
+  (progn
+    (setq-default flycheck-disabled-checkers '(haskell-ghc haskell-stack-ghc))
+    )
+  )
+
 ;; Theme
 
 (use-package moe-theme
   :ensure t
-  :config
-  (moe-dark))
+  :config  (load-theme 'moe-dark t))
 
 (use-package beacon
   :ensure t
@@ -118,17 +126,25 @@
 (use-package pretty-mode
   :ensure t
   :init (global-pretty-mode t)
+  :commands pretty-deactivate-patterns
+  :commands pretty-activate-groups
+  :commands pretty-deactivate-groups
   :config (progn
-  (pretty-deactivate-groups
-    '(:logic :nil))
-  (pretty-activate-groups
-    '(:greek :arithmetic-nary :punctuation))
-  (pretty-deactivate-patterns '(:circ :++ :sum :product :equality :==)))
+	    (pretty-deactivate-groups
+	     '(:logic :nil))
+	    (pretty-activate-groups
+	     '(:greek :arithmetic-nary :punctuation))
+	    (pretty-deactivate-patterns '(:circ :++ :sum :product :equality :==)))
   )
 
 (use-package format-all
   :ensure t
   :diminish format-all-mode
+  :config
+  (progn
+    (add-hook 'emacs-lisp-mode-hook 'format-all-mode)
+    (add-hook 'haskell-mode-hook 'format-all-mode)
+    )
   )
 
 
@@ -145,16 +161,16 @@
   :config
   (progn
     (setq
-      org-catch-invisible-edits 'error ;; No editing of folded regions
-      org-startup-indented t ;; Idented at startup
-      org-log-done 'time ;; Log completion time
-      org-hierarchical-todo-statistics nil ;; Stats are recursive
-      org-support-shift-select t
-      org-directory "~/org"
-      org-enforce-todo-dependencies t ;; TODO dependencies are enforced
-      org-format-latex-options (plist-put org-format-latex-options :scale 1.6)
-      )
-   )
+     org-catch-invisible-edits 'error ;; No editing of folded regions
+     org-startup-indented t ;; Idented at startup
+     org-log-done 'time ;; Log completion time
+     org-hierarchical-todo-statistics nil ;; Stats are recursive
+     org-support-shift-select t
+     org-directory "~/org"
+     org-enforce-todo-dependencies t ;; TODO dependencies are enforced
+     org-format-latex-options (plist-put org-format-latex-options :scale 1.6)
+     )
+    )
   )
 
 ;; Pretty org-bullets
@@ -170,7 +186,7 @@
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
-          ("\\.markdown\\'" . markdown-mode))
+	 ("\\.markdown\\'" . markdown-mode))
   )
 
 ;; Haskell
@@ -182,11 +198,10 @@
   :config
   (progn
     (setq
-      haskell-process-suggest-remove-import-lines t
-      haskell-process-auto-import-loaded-modules t
-      haskell-process-log t
-      )
-    (add-hook 'haskell-mode-hook 'format-all-mode)
+     haskell-process-suggest-remove-import-lines t
+     haskell-process-auto-import-loaded-modules t
+     haskell-process-log t
+     )
     )
   )
 
@@ -222,11 +237,14 @@
     (bind-key [remap completion-at-point] #'company-complete company-mode-map)
 
     (setq
-      company-tooltip-align-annotations t
-      company-show-numbers t
-      company-dabbrev-downcase nil
-      company-minimum-prefix-length 2
-      company-idle-delay 0.1))
+     company-tooltip-align-annotations t
+     company-show-numbers t
+     company-minimum-prefix-length 2
+     company-idle-delay 0.1)
+
+    (defvar company-dabbrev-downcase nil)
+
+    )
   :diminish company-mode)
 
 ;; Python auto completion
@@ -236,7 +254,7 @@
 (use-package company-jedi
   :ensure t
   :init
-  (setq company-jedi-python-bin "python3")
+  (defvar company-jedi-python-bin "python3")
   :config
   (add-to-list 'company-backends 'company-jedi))
 
@@ -254,15 +272,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-  '(custom-safe-themes
-     (quote
-       ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" default)))
-  '(package-selected-packages
-     (quote
-       (diff-hl go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package spacemacs-theme smex smartparens smart-mode-line rust-mode pretty-mode powerline pandoc-mode org-bullets mustache-mode markdown-mode magit jekyll-modes jedi ir-black-theme idris-mode hlint-refactor haskell-mode guess-language flycheck ess emojify editorconfig drag-stuff dockerfile-mode csv-mode company-jedi clang-format cdlatex auctex))))
+ '(custom-safe-themes
+   (quote
+    ("26d49386a2036df7ccbe802a06a759031e4455f07bda559dcf221f53e8850e69" "a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" default)))
+ '(package-selected-packages
+   (quote
+    (diff-hl go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package smex smartparens smart-mode-line rust-mode pretty-mode org-bullets markdown-mode jedi ir-black-theme idris-mode haskell-mode guess-language flycheck emojify editorconfig dockerfile-mode csv-mode company-jedi cdlatex auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((((class color) (min-colors 89)) (:foreground "#D8DEE9" :background nil)))))
+
+(provide 'init)
+;;; init.el ends here

@@ -25,7 +25,7 @@
 (setq
  inhibit-startup-screen t
  initial-scratch-message nil
- initial-major-mode 'markdown-mode
+ initial-buffer-choice "~/org/inbox.org"
  resize-mini-windows nil)
 
 (setq-default
@@ -65,9 +65,23 @@
 
 (global-set-key "\C-x\C-k" 'kill-buffer) ;; C-x C-k does the same as C-x k
 (global-set-key "\C-x\ f" 'find-file) ;; Same as above, overrides fill-column
-(global-set-key  (kbd "<C-tab>") 'next-buffer)
-(global-set-key (kbd "<C-iso-lefttab>") 'previous-buffer)
 
+(defun my/clean-frames-and-buffers ()
+  "Kill and close unmodified buffers different from the selected frame."
+  (interactive)
+  (save-window-excursion
+    (dolist (buffer (buffer-list))
+      (and (buffer-live-p buffer)
+           (not (buffer-modified-p buffer))
+           (kill-buffer buffer))))
+  (save-buffers-kill-terminal)
+  )
+
+(global-set-key "\C-x\C-c" 'my/clean-frames-and-buffers)
+
+(setq mode-line-format
+      '("%e" mode-line-front-space mode-line-client mode-line-modified mode-line-remote mode-line-frame-identification mode-line-buffer-identification " " mode-line-position (vc-mode vc-mode) " " mode-line-modes mode-line-misc-info mode-line-end-spaces)
+      )
 
 ;; PACKAGES ;;
 
@@ -90,7 +104,6 @@
   :diminish smartparens-mode
   :init
   (progn
-    (use-package smartparens-config)
     (smartparens-global-mode 1)
     (show-smartparens-global-mode 1))
   :config (setq smartparens-strict-mode t)
@@ -100,6 +113,21 @@
   :ensure flycheck-clang-tidy
   :init  (global-flycheck-mode)
   :config (add-hook 'flycheck-mode-hook #'flycheck-clang-tidy-setup)
+  )
+
+(use-package hideshow-org
+  :load-path "extra"
+  :diminish hs-org/minor-mode
+  :config
+  (progn
+    (add-hook 'python-mode-hook 'hs-org/minor-mode)
+    (add-hook 'c++-mode-hook 'hs-org/minor-mode)
+    (add-hook 'java-mode-hook 'hs-org/minor-mode)
+    )
+  )
+
+(use-package eldoc
+  :diminish eldoc-mode
   )
 
 ;; Theme
@@ -121,7 +149,7 @@
   (progn
     (pretty-deactivate-groups '(:logic :nil))
     (pretty-activate-groups '(:greek :arithmetic-nary :punctuation))
-    (pretty-deactivate-patterns '(:++ :sum :product :==))
+    (pretty-deactivate-patterns '(:++ :sum :product :== :===))
     )
   )
 
@@ -132,6 +160,10 @@
     (add-hook 'emacs-lisp-mode-hook 'format-all-mode)
     (add-hook 'haskell-mode-hook 'format-all-mode)
     (add-hook 'c++-mode-hook 'format-all-mode)
+    (add-hook 'html-mode-hook 'format-all-mode)
+    (add-hook 'css-mode-hook 'format-all-mode)
+    (add-hook 'javascript-mode-hook 'format-all-mode)
+    (add-hook 'java-mode-hook 'format-all-mode)
     )
   )
 
@@ -144,6 +176,7 @@
 ;; ORG
 
 (use-package org
+  :diminish org-indent-mode
   :mode ("\\.org" . org-mode)
   :bind
   (("C-c l" . org-store-link)
@@ -156,25 +189,25 @@
   (org-hierarchical-todo-statistics nil "Stats are recursive")
   (org-support-shift-select t)
   (org-directory "~/org")
-  (org-agenda-files '("~/org") "List of agenda files")
+  (org-agenda-files '("~/org/agenda.org" "~/org/reminders.org") "List of agenda files")
   (org-agenda-span 10 "How many days to show in the agenda")
   (org-agenda-start-on-weekday nil "Start on current day")
   (org-agenda-start-day "-1d" "Show previous day on agenda")
   (org-enforce-todo-dependencies t "TODO dependencies are enforced")
   (org-clock-persist 'history)
   (org-clock-idle-time 10 "Time until being idle")
-  (org-timer-default-timer 25 "Pomodoro")
-  (org-ellipsis " ⤵" "Aesthetic change")
+  (org-ellipsis " …" "Aesthetic change")
+  (org-tags-column 0 "Don't flush tags")
   :config
   (org-clock-persistence-insinuate)
   ;; Update clock table on save
   (add-hook 'org-mode-hook
 	    (lambda() (add-hook 'before-save-hook
-			   'org-update-all-dblocks t t)))
+				'org-update-all-dblocks t t)))
   )
 
 (use-package org-archive-subtree-hierarchical
-  :load-path "org-extra"
+  :load-path "extra"
   :after org
   :config
   (setq org-archive-default-command 'org-archive-subtree-hierarchical)
@@ -206,6 +239,39 @@
   :config (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   )
 
+;; Scala
+
+;; Enable scala-mode and sbt-mode
+(use-package scala-mode
+  :mode "\\.s\\(cala\\|bt\\)$")
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
+  ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+  (setq sbt:program-options '("-Dsbt.supershell=false"))
+  )
+
+
+(use-package lsp-mode
+  :diminish lsp-mode
+  :hook ((scala-mode c++-mode python-mode) . lsp)
+  :config (setq
+	   lsp-prefer-flymake nil
+	   lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
+  )
+
+(use-package lsp-ui)
+(use-package yasnippet
+  :diminish yas-minor-mode
+  )
+(use-package company-lsp)
 
 ;; Misc languages
 
@@ -213,6 +279,10 @@
 (use-package rust-mode)
 (use-package idris-mode)
 (use-package go-mode)
+(use-package json-mode)
+(use-package pkgbuild-mode)
+(use-package nix-mode
+  :mode "\\.nix\\'")
 
 
 ;; Editorconfig
@@ -226,7 +296,6 @@
   :defer t
   :bind ("C-c r" . vr/replace)
   )
-
 
 (use-package company
   :defer t
@@ -276,7 +345,7 @@
     ("26d49386a2036df7ccbe802a06a759031e4455f07bda559dcf221f53e8850e69" "a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" default)))
  '(package-selected-packages
    (quote
-    (diff-hl go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package smex smartparens smart-mode-line rust-mode pretty-mode org-bullets markdown-mode jedi ir-black-theme idris-mode haskell-mode guess-language flycheck editorconfig csv-mode company-jedi cdlatex auctex))))
+    (cmake-mode json-mode diff-hl go-mode gnu-elpa-keyring-update yasnippet yaml-mode visual-regexp use-package smex smartparens smart-mode-line rust-mode pretty-mode org-bullets markdown-mode jedi ir-black-theme idris-mode haskell-mode guess-language flycheck editorconfig csv-mode company-jedi cdlatex auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

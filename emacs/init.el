@@ -7,6 +7,7 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; Bootstrap `use-package'
@@ -177,6 +178,7 @@
 
 (use-package org
   :diminish org-indent-mode
+  :ensure org-plus-contrib
   :mode ("\\.org" . org-mode)
   :bind
   (("C-c l" . org-store-link)
@@ -198,14 +200,40 @@
   (org-clock-idle-time 10 "Time until being idle")
   (org-ellipsis " …" "Aesthetic change")
   (org-tags-column 0 "Don't flush tags")
+  (org-log-into-drawer t "Log done states into drawer")
+  (org-todo-keywords
+   '((sequence "TODO(t)" "STARTED(s!)" "|" "DONE(d)" "ABANDONED(a@)" "WAITING(w@)"))
+   "Tasks can be started or they can be abandoned or waiting")
+  (org-todo-keyword-faces
+   '(
+     ("TODO" . org-todo)
+     ("STARTED" . (:foreground "dark goldenrod" :background "yellow" :weight bold))
+     ("DONE" . org-done)
+     ("ABANDONED" . org-done)
+     ("WAITING" . (:foreground "medium blue" :background "deep sky blue" :weight bold))
+     )
+   "Style for keywords")
   :config
   (org-clock-persistence-insinuate)
   ;; Update clock table on save
   (add-hook 'org-mode-hook
 	    (lambda() (add-hook 'before-save-hook
-				'org-update-all-dblocks t t)))
+			   'org-update-all-dblocks t t)))
+
   )
 
+;; ADD CREADO property
+;; Adapted from: stackoverflow.com/a/13285957/3414720
+(use-package org-expiry
+  :custom
+  (org-expiry-created-property-name "CREADO")
+  (org-expiry-inactive-timestamps t)
+  :config
+  (add-hook 'org-insert-heading-hook 'org-expiry-insert-created)
+  )
+
+
+;; Archive preserving original tree structure
 (use-package org-archive-subtree-hierarchical
   :load-path "extra"
   :after org
@@ -215,11 +243,10 @@
 
 ;; Pretty org-bullets
 (use-package org-bullets
-  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  :init (add-hook 'org-mode-hook 'org-bullets-mode)
   )
 
 ;; Markdown
-
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -267,7 +294,19 @@
 	   lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
   )
 
-(use-package lsp-ui)
+(use-package lsp-ui
+  :config (setq lsp-ui-doc-enable t
+		lsp-ui-doc-use-childframe t
+		lsp-ui-doc-position 'top
+		lsp-ui-doc-include-signature t
+		lsp-ui-sideline-enable nil
+		lsp-ui-flycheck-enable t
+		lsp-ui-flycheck-list-position 'right
+		lsp-ui-flycheck-live-reporting t
+		lsp-ui-peek-enable t
+		lsp-ui-peek-list-width 60
+		lsp-ui-peek-peek-height 25)
+  )
 (use-package yasnippet
   :diminish yas-minor-mode
   )

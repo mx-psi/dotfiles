@@ -12,7 +12,7 @@ import getpass
 
 # Destination folder
 USER = getpass.getuser()
-ORIGIN_FOLDER = "dpbx://" + platform.node()  # hostname
+ORIGIN_FOLDER = "dpbx://pablo-W740SU"  # hostname
 RESTORE_FOLDER = "/home/{whoami}/Backups".format(whoami=USER)
 
 # Secret files

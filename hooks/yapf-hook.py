@@ -2,7 +2,7 @@
 # simple pre-commit hook for yapf
 
 import subprocess
-import os
+import sys
 
 
 def get_modified_files():
@@ -26,4 +26,4 @@ if __name__ == "__main__":
         if diff.stdout:
             subprocess.run(["patch", "-p0"], input=diff.stdout)
             print("Files were changed, aborting commit.")
-            exit(-1)
+            sys.exit(-1)

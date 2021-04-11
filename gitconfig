@@ -22,3 +22,10 @@
 	gpgSign = true
 [gpg]
   program = gpg2
+[core]
+  pager = delta
+[delta]
+  syntax-theme = Dracula
+  navigate = true
+[interactive]
+  diffFilter = delta --color-only

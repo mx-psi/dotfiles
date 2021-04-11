@@ -1,0 +1,95 @@
+# espanso configuration file
+
+# This is the default configuration file, change it as you like it
+# You can refer to the official documentation:
+# https://espanso.org/docs/
+
+# Matches are the substitution rules, when you type the "trigger" string
+# it gets replaced by the "replace" string.
+matches:
+  # Simple text replacement
+  - trigger: ":espanso"
+    replace: "Hi there!"
+
+  # Dates
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%d/%m/%Y"
+
+  - trigger: ":euro"
+    replace: "€"
+
+  # Shell commands
+  - trigger: ":shell"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "echo Hello from your shell"
+  - trigger: "[n"
+    replace: "ñ"
+  - trigger: "[N"
+    replace: "Ñ"
+  - trigger: "[a"
+    replace: "á"
+  - trigger: "[e"
+    replace: "é"
+  - trigger: "[i"
+    replace: "í"
+  - trigger: "[o"
+    replace: "ó"
+  - trigger: "[u"
+    replace: "ú"
+  - trigger: "[A"
+    replace: "Á"
+  - trigger: "[E"
+    replace: "É"
+  - trigger: "[I"
+    replace: "Í"
+  - trigger: "[O"
+    replace: "Ó"
+  - trigger: "[U"
+    replace: "Ú"
+  - trigger: "^a"
+    replace: "â"
+  - trigger: "^e"
+    replace: "ê"
+  - trigger: "^i"
+    replace: "î"
+  - trigger: "^o"
+    replace: "ô"
+  - trigger: "^u"
+    replace: "û"
+  - trigger: "^A"
+    replace: "Â"
+  - trigger: "^E"
+    replace: "Ê"
+  - trigger: "^I"
+    replace: "Î"
+  - trigger: "^O"
+    replace: "Ô"
+  - trigger: "^U"
+    replace: "Û"
+  - trigger: "`a"
+    replace: "à"
+  - trigger: "`e"
+    replace: "è"
+  - trigger: "`u"
+    replace: "ù"
+  - trigger: "`A"
+    replace: "À"
+  - trigger: "`E"
+    replace: "È"
+  - trigger: "`U"
+    replace: "Ù"
+  - trigger: "[c"
+    replace: "ç"
+  - trigger: ":bed"
+    replace: "🛏"
+  - trigger: ":movie"
+    replace: "🎥"

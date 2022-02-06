@@ -10,11 +10,11 @@ import platform
 # MODIFIABLE PARAMETERS
 
 # Destination folder
-DEST_FOLDER = "dpbx://pablo-W740SU"  # hostname
+DEST_FOLDER = "dpbx://pablo-XPS159500"  # hostname
 
 # Secret files
-LIST_FILE = "/home/pablo/dotfiles/secrets/files-to-sync.dat"
-KEYS_FILE = "/home/pablo/dotfiles/secrets/duplicity-secrets.yaml"
+LIST_FILE = "/home/pablo/Source/dotfiles/secrets/files-to-sync.dat"
+KEYS_FILE = "/home/pablo/Source/dotfiles/secrets/duplicity-secrets.yaml"
 
 # Lifespan of backups
 LIFESPAN = "4M"

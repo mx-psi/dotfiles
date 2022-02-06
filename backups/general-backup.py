@@ -5,7 +5,18 @@
 import os
 import yaml
 import subprocess
-import platform
+import logging
+from logging.handlers import RotatingFileHandler
+
+logger = logging.getLogger("logger")
+logger.setLevel(logging.DEBUG)
+handler = RotatingFileHandler("/var/log/backups.log", maxBytes=10000, backupCount=10)
+handler.setFormatter(
+    logging.Formatter(
+        fmt="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s"
+    )
+)
+logger.addHandler(handler)
 
 # MODIFIABLE PARAMETERS
 
@@ -25,22 +36,36 @@ FULL_SPAN = "1M"
 
 def load_secrets(filepath):
     """Load secrets into environment variables that can be used by duplicity."""
-    with open(filepath, 'r') as data:
+    with open(filepath, "r") as data:
         os.environ.update(yaml.safe_load(data.read()))
+
+
+def run_and_log(arg_list):
+    out = subprocess.run(arg_list, capture_output=True)
+    if out.stdout:
+        logger.info(str(out.stdout, "utf-8"))
+    if out.stderr:
+        logger.error(str(out.stderr, "utf-8"))
 
 
 if __name__ == "__main__":
     load_secrets(KEYS_FILE)
 
     # Remove old files from destination folder
-    subprocess.run(
-        ["duplicity", "remove-older-than", LIFESPAN, "--force", DEST_FOLDER])
+    run_and_log(["duplicity", "remove-older-than", LIFESPAN, "--force", DEST_FOLDER])
 
     # Backup listed files to destination folder; specify timing of full backups
-    subprocess.run([
-        "duplicity", "--full-if-older-than", FULL_SPAN, "--include-filelist",
-        LIST_FILE, "/home/pablo", DEST_FOLDER
-    ])
+    run_and_log(
+        [
+            "duplicity",
+            "--full-if-older-than",
+            FULL_SPAN,
+            "--include-filelist",
+            LIST_FILE,
+            "/home/pablo",
+            DEST_FOLDER,
+        ]
+    )
 
     # Cleanup failures
-    subprocess.run(["duplicity", "cleanup", "--force", DEST_FOLDER])
+    run_and_log(["duplicity", "cleanup", "--force", DEST_FOLDER])

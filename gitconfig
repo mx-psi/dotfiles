@@ -19,7 +19,7 @@
 [pull]
 	rebase = true
 [commit]
-	gpgSign = true
+	gpgSign = false
 [gpg]
   program = gpg2
 [core]
